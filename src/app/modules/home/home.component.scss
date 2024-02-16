@@ -35,6 +35,7 @@ input {
   margin-bottom: 20px;
 }
 
+
 button {
   cursor: pointer;
   background: $button;
@@ -45,6 +46,14 @@ button {
   padding: 10px 15px;
   margin: 0;
   margin-bottom: 15px;
+}
+
+button[disabled] {
+  opacity: 0.5;
+}
+
+button:hover {
+  background: #0056b3;
 }
 
 .login-card{

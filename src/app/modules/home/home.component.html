@@ -1,37 +1,37 @@
 <div class="container">
 
-  <form>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmitForm()">
     <div class="card" *ngIf="loginCard">
       <h1 class="title">Login</h1>
       <p class="subtitle">Faça login com sua conta existente!</p>
       <div class="">
-        <input type="email" placeholder="Email" />
+        <input type="email" placeholder="Email" formControlName="email"/>
       </div>
       <div class="">
-        <input type="password" placeholder="Senha" />
+        <input type="password" placeholder="Senha" formControlName="password"/>
       </div>
       <div class="">
-        <button type="submit">Login</button>
+        <button type="submit" [disabled]="!this.loginForm.valid">Login</button>
       </div>
       <a href="#" class="login-card" (click)="loginCard = !loginCard">Criar conta</a>
     </div>
   </form>
 
-  <form>
+  <form [formGroup]="loginForm" (submit)="onSubmitForm()">
     <div class="card" *ngIf="!loginCard">
       <h1 class="title">Criar conta</h1>
       <p class="subtitle">Crie sua conta grátis!</p>
       <div>
-        <input type="email" placeholder="Email" />
+        <input type="email" placeholder="Email" formControlName="email"/>
       </div>
       <div>
-        <input type="password" placeholder="Senha" />
+        <input type="password" placeholder="Senha" formControlName="password"/>
       </div>
       <div>
-        <input type="password" placeholder="Repetir Senha" />
+        <input type="password" placeholder="Repetir Senha" formControlName="password"/>
       </div>
       <div>
-        <button type="submit">Criar conta</button>
+        <button type="submit" [disabled]="!this.loginForm.valid">Criar conta</button>
       </div>
       <a href="#" class="login-card" (click)="loginCard = !loginCard">Fazer login</a>
     </div>
