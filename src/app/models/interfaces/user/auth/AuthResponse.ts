@@ -1,5 +1,6 @@
 export interface AuthResponse {
   id: string;
+  name: string;
   email: string;
-  token: string; //Token JWT para autenticação 
+  token: string; //Token JWT para autenticação
 };

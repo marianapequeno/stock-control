@@ -1,4 +1,5 @@
-export interface SignupUserResponse { //Pode retornar o 'nome' também se quiser
+export interface SignupUserResponse {
   id: string;
+  name: string;
   email: string;
 }
