@@ -22,7 +22,7 @@ import { HomeComponent } from './modules/home/home.component';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientModule,
+    HttpClientModule, //Para fazer requisições HTTP
     ReactiveFormsModule,
     CardModule,
     InputTextModule,
