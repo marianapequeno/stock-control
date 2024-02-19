@@ -8,7 +8,7 @@ import { AuthResponse } from 'src/app/models/interfaces/user/auth/AuthResponse';
 import { environment } from 'src/environments/environment'; //de desenvolvimento
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root', //Indica que este serviço pode ser usado em qualquer classe
 })
 export class UserService {
   private API_URL = environment.API_URL; //de desenvolvimento

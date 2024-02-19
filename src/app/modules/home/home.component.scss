@@ -49,10 +49,11 @@ button {
 }
 
 button[disabled] {
+  cursor: not-allowed;
   opacity: 0.5;
 }
 
-button:hover {
+button:not([disabled]):hover {/*Desabilitar o hover quando o botão estiver disabled*/
   background: #0056b3;
 }
 
