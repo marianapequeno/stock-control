@@ -5,6 +5,7 @@ import { AuthRequest } from 'src/app/models/interfaces/user/auth/AuthRequest';
 import { CookieService } from 'ngx-cookie-service';
 import { SignupUserRequest } from 'src/app/models/interfaces/user/SignupUserRequest';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +30,8 @@ export class HomeComponent {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private cookieService: CookieService, //Biblioteca externa ngx-cookie-service
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   //Para login em conta existente
@@ -41,6 +43,7 @@ export class HomeComponent {
             //Após autenticar o login, guarda o token JWT recebido na response em um cookie:
             this.cookieService.set('USER_INFO', response?.token); //Guardar o token nos cookies
             this.loginForm.reset();
+            this.router.navigate(['/dashboard']);
 
             //Exibe um popup com mensagem de login feito com sucesso ou falha:
             this.messageService.add({
