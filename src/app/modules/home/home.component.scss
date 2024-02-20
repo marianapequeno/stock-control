@@ -76,3 +76,9 @@ button:not([disabled]):hover {/*Desabilitar o hover quando o botão estiver disa
     }
   }
 }
+
+@media screen and (max-width: 1000px) {
+  .container {
+    height: 100vmax;
+  }
+}
