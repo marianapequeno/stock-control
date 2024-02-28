@@ -22,6 +22,14 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'categories',
+    loadChildren: () =>
+      import('./modules/categories/categories.module').then(
+        (m) => m.CategoriesModule
+      ),
+    canActivate: [AuthGuard],//Para confirmar uma rota privada, liberada apenas para users logados
+  }
 ];
 
 @NgModule({
