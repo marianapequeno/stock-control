@@ -44,6 +44,8 @@
                 <p-button
                   styleClass="p-button-info"
                   icon="pi pi-plus"
+                  pTooltip="Adicionar Categoria"
+                  tooltipPosition="top"
                   label="Adicionar"
                   (onClick)="handleCategoryEvent(addCategoryAction)"
                 ></p-button>
@@ -63,12 +65,17 @@
                   pButton
                   pRipple
                   icon="pi pi-pencil"
+                  pTooltip="Editar Categoria"
+                  tooltipPosition="top"
                   class="p-button-rounded p-button-warning"
+                  (click)="handleCategoryEvent(editCategoryAction, category?.id, category?.name)"
                 ></button>
                 <button
                   pButton
                   pRipple
                   icon="pi pi-trash"
+                  pTooltip="Remover Categoria"
+                  tooltipPosition="top"
                   class="p-button-rounded p-button-danger"
                   (click)="handleDeleteCategoryEvent(category?.id, category?.name)"
                 ></button>

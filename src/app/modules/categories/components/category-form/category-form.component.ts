@@ -10,7 +10,7 @@ import { CategoriesService } from 'src/app/services/categories/categories.servic
 @Component({
   selector: 'app-category-form',
   templateUrl: './category-form.component.html',
-  styleUrls: ['./category-form.component.scss']
+  styleUrls: ['./category-form.component.scss'],
 })
 export class CategoryFormComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
@@ -29,36 +29,100 @@ export class CategoryFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.categoryAction = this.ref.data;
+    if (
+      (this.categoryAction?.event?.action === this.editCategoryAction &&
+        this.categoryAction?.event.categoryName !== null) ||
+      undefined
+    ) {
+      this.setCategoryName(this.categoryAction?.event?.categoryName as string);
+    }
+  }
 
+  handleSubmitCategoryAction(): void {
+    if (this.categoryAction?.event?.action == this.addCategoryAction) {
+      this.handleSubmitAddCategory();
+    } else if (this.categoryAction?.event?.action == this.editCategoryAction) {
+      this.handleSubmitEditCategory();
+    }
+    return;
   }
 
   handleSubmitAddCategory(): void {
-    if (this.categoryForm?.value && this.categoryForm ?.valid) {
+    if (this.categoryForm?.value && this.categoryForm?.valid) {
       const requestCreateCategory: { name: string } = {
         name: this.categoryForm.value.name as string,
       };
-      this.categoriesService  .createNewCategory(requestCreateCategory).pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response) => {
-          if (response) {
+      this.categoriesService
+        .createNewCategory(requestCreateCategory)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if (response) {
+              this.categoryForm.reset();
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'Categoria criada com sucesso!',
+                life: 3000,
+              });
+            }
+          },
+          error: (err) => {
+            console.log(err);
+            this.categoryForm.reset();
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao criar categoria!',
+              life: 3000,
+            });
+          },
+        });
+    }
+  }
+
+  handleSubmitEditCategory(): void {
+    if (
+      this.categoryForm?.value &&
+      this.categoryForm?.valid &&
+      this.categoryAction?.event.id
+    ) {
+      const requestEditCategory: { name: string; category_id: string } = {
+        name: this.categoryForm?.value.name as string,
+        category_id: this.categoryAction?.event?.id,
+      };
+      this.categoriesService
+        .editCategoryName(requestEditCategory)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
             this.categoryForm.reset();
             this.messageService.add({
               severity: 'success',
               summary: 'Sucesso',
-              detail: 'Categoria criada com sucesso!',
-              life: 3000
+              detail: 'Categoria alterada com sucesso!',
+              life: 3000,
             });
-          }
-        },
-        error: (err) => {
-          console.log(err);
-          this.categoryForm.reset();
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Erro ao criar categoria!',
-            life: 3000
-          });
-        }
+          },
+          error: (err) => {
+            console.log(err);
+            this.categoryForm.reset();
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao alterar categoria!',
+              life: 3000,
+            });
+          },
+        });
+    }
+  }
+
+  setCategoryName(categoryName: string): void {
+    if (categoryName) {
+      this.categoryForm.setValue({
+        name: categoryName,
       });
     }
   }
