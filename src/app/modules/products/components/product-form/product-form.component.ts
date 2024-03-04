@@ -9,6 +9,7 @@ import { GetCategoriesResponse } from 'src/app/models/interfaces/categories/resp
 import { EventAction } from 'src/app/models/interfaces/products/event/EventAction';
 import { CreateProductRequest } from 'src/app/models/interfaces/products/request/CreateProductRequest';
 import { EditProductRequest } from 'src/app/models/interfaces/products/request/EditProductRequest';
+import { SaleProductRequest } from 'src/app/models/interfaces/products/request/SaleProductRequest';
 import { GetAllProductsResponse } from 'src/app/models/interfaces/products/response/GetAllProductsResponse';
 import { CategoriesService } from 'src/app/services/categories/categories.service';
 import { ProductsService } from 'src/app/services/products/products.service';
@@ -47,10 +48,15 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     amount: [0, Validators.required],
     category_id: ['', Validators.required],
   });
+  public saleProductForm = this.formBuilder.group({
+    amount: [0, Validators.required],
+    product_id: ['', Validators.required],
+  });
+  public saleProductSelected!: GetAllProductsResponse;
 
   public addProductAction = ProductEvent.ADD_PRODUCT_EVENT;
   public editProductAction = ProductEvent.EDIT_PRODUCT_EVENT;
-  public saletProductAction = ProductEvent.SALE_PRODUCT_EVENT;
+  public saleProductAction = ProductEvent.SALE_PRODUCT_EVENT;
   public renderDropdown = false;
 
   constructor(
@@ -66,7 +72,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.productAction = this.ref.data;
 
-    this.productAction?.event?.action === this.saletProductAction &&
+    this.productAction?.event?.action === this.saleProductAction &&
       this.getProductDatas();
 
     this.getAllCategories();
@@ -85,7 +91,9 @@ export class ProductFormComponent implements OnInit, OnDestroy {
               this.productAction?.event?.action === this.editProductAction &&
               this.productAction?.productsDatas
             ) {
-              this.getProductSelectedDatas(this.productAction?.event?.id as string);
+              this.getProductSelectedDatas(
+                this.productAction?.event?.id as string
+              );
             }
           }
         },
@@ -152,7 +160,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'success',
               summary: 'Sucesso',
-              detail: 'Produro editado com sucesso!',
+              detail: 'Produto editado com sucesso!',
               life: 2500,
             });
             this.editProductForm.reset();
@@ -162,10 +170,45 @@ export class ProductFormComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao digitar produto!',
+              detail: 'Erro ao editar produto!',
               life: 2500,
             });
             this.editProductForm.reset();
+          },
+        });
+    }
+  }
+
+  handleSubmitSaleProduct(): void {
+    if (this.saleProductForm.value && this.saleProductForm.valid) {
+      const requestDatas: SaleProductRequest = {
+        amount: this.saleProductForm.value.amount as number,
+        product_id: this.saleProductForm.value.product_id as string,
+      };
+      this.productService
+        .saleProduct(requestDatas)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'Venda efetuada com sucesso!',
+              life: 3000,
+            });
+            this.saleProductForm.reset();
+            this.getProductDatas();
+            this.router.navigate(['/dashboard']);
+          },
+          error: (err) => {
+            console.log(err);
+            this.saleProductForm.reset();
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao efetuar venda!',
+              life: 3000,
+            });
           },
         });
     }
@@ -206,7 +249,6 @@ export class ProductFormComponent implements OnInit, OnDestroy {
         },
       });
   }
-
 
   ngOnDestroy(): void {
     this.destroy$.next();
